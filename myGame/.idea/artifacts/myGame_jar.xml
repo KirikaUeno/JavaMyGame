@@ -3,9 +3,6 @@
     <output-path>$PROJECT_DIR$/out/artifacts/myGame_jar</output-path>
     <root id="archive" name="myGame.jar">
       <element id="module-output" name="mainModule" />
-      <element id="directory" name="images">
-        <element id="dir-copy" path="$PROJECT_DIR$/images" />
-      </element>
     </root>
   </artifact>
 </component>

@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent;
 
 public class UIKeyAction extends AbstractAction {
     private final char key;
-    private GamePanel panel;
+    private final GamePanel panel;
 
     public UIKeyAction(char key, GamePanel panel){
         this.key = key;

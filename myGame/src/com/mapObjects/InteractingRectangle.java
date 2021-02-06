@@ -24,9 +24,6 @@ public class InteractingRectangle {
         if((b.y>(y+height)) || ((b.y+b.height)<y)){
             return false;
         }
-        else if((b.x>(x+wight)) || ((b.x+b.wight)<x)){
-            return false;
-        }
-        else return true;
+        else return (!(b.x > (x + wight))) && (!((b.x + b.wight) < x));
     }
 }

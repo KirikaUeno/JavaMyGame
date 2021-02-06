@@ -6,9 +6,9 @@ import com.image.ImageFactory;
 import javax.swing.*;
 
 public class Skin {
-    private String skinName;
-    private Images headImage;
-    private Images bodyImage;
+    private final String skinName;
+    private final Images headImage;
+    private final Images bodyImage;
     public ImageIcon headimage;
     public ImageIcon bodyimage;
 

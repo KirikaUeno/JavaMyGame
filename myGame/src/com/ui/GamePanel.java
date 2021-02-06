@@ -18,7 +18,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class GamePanel extends JPanel {
+public class GamePanel extends PositioningJPanel {
     private final JLabel buttons = new JLabel("0 0 0 0");
     private Maps map;
     private Player player;
@@ -27,6 +27,9 @@ public class GamePanel extends JPanel {
     private final NearMouseBox box = new NearMouseBox();
     private final SpringLayout layout = new SpringLayout();
     public MainMouseListener mouseListener = new MainMouseListener(this);
+    private int imagePosX=0;
+    private int imagePosY=0;
+    private boolean drawImage = false;
 
     public GamePanel(MainFrame frame){
         setPreferredSize(new Dimension(Constants.boardWight,Constants.boardHeight));
@@ -45,6 +48,7 @@ public class GamePanel extends JPanel {
         inv.setVisible(false);
         box.setVisible(false);
         addMouseMotionListener(mouseListener);
+        addMouseListener(mouseListener);
 
         layout.putConstraint(SpringLayout.EAST, inv, -10, SpringLayout.EAST, this);
         layout.putConstraint(SpringLayout.VERTICAL_CENTER, inv, 0, SpringLayout.VERTICAL_CENTER, this);
@@ -52,6 +56,8 @@ public class GamePanel extends JPanel {
 
         Timer timer = new Timer(Constants.gameSpeed, e -> doOneLoop());
         timer.start();
+        posX=0;
+        posY=0;
     }
 
     public void mouseMovedGamePanel() {
@@ -119,6 +125,13 @@ public class GamePanel extends JPanel {
         Toolkit.getDefaultToolkit().sync();
     }
 
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        if(drawImage) g.drawImage(box.getDraggedItem().getIcon().getImage(), imagePosX,imagePosY,this);
+        Toolkit.getDefaultToolkit().sync();
+    }
+
     private void doDrawing(Graphics g) {
         drawMap(g);
     }
@@ -163,5 +176,11 @@ public class GamePanel extends JPanel {
 
     public NearMouseBox getBox(){
         return box;
+    }
+
+    public void setImageProperties(boolean drawImage, int posX,int posY){
+        this.drawImage = drawImage;
+        imagePosX = posX;
+        imagePosY = posY;
     }
 }

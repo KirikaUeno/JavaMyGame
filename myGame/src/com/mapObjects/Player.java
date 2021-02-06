@@ -9,7 +9,7 @@ import javax.swing.*;
 public class Player extends DynamicSprite {
     private final Skin skin;
     private final int[] pressedButtons = new int[4];
-    private int i=0;
+    private final int i=0;
     protected ImageIcon spriteLeft1;
     protected ImageIcon spriteRight1;
     protected ImageIcon spriteLeft2;
