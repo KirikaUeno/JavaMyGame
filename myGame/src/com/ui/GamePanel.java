@@ -183,4 +183,8 @@ public class GamePanel extends PositioningJPanel {
         imagePosX = posX;
         imagePosY = posY;
     }
+
+    public Maps getMap() {
+        return map;
+    }
 }

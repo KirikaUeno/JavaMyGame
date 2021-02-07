@@ -8,6 +8,7 @@ import com.mapObjects.StaticCreatures;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Maps {
     public ArrayList<StaticCreatures> staticTerrain;
@@ -195,5 +196,109 @@ public class Maps {
                     break;
             }
         }
+    }
+
+    public void calculatePath(int fx, int fy){
+        player.setPath(null);
+        player.setJ(0);
+        int inf = 100000;
+        int ix = player.getX()+(int)player.getWight()/2;
+        int iy = player.getY()+(int)player.getHeight()/2;
+        Node[][] nodes = new Node[Constants.boardWight][Constants.boardHeight];
+        for(int i = 0; i < Constants.boardWight; i++){
+            for(int j=0; j < Constants.boardHeight; j++){
+                nodes[i][j]=new Node(i,j);
+            }
+        }
+        for(StaticCreatures stat: staticTerrain){
+            for(int i=(stat.getX()-(int)(player.getWight()/2));i<(stat.getX()+stat.getWight()+(int)(player.getWight()/2));i++){
+                for(int j = (stat.getY()-(int)(player.getHeight()/2));j<(stat.getY()+stat.getHeight()+(int)(player.getHeight()/2));j++){
+                    if(i>=0 && j>=0 && i<Constants.boardWight && j<Constants.boardHeight){
+                        nodes[i][j].value = inf;
+                    }
+                }
+            }
+        }
+        Node goal = nodes[fx][fy];
+        Node start = nodes[ix][iy];
+        start.g=0;
+        start.f=h(start,goal);
+        ArrayList<Node> openSet = new ArrayList<>();
+        //ArrayList<Node> closedSet = new ArrayList<>();
+        openSet.add(start);
+        Node current;
+        //System.out.println(start.i+" "+ start.j);
+        //System.out.println(goal.i+" "+ goal.j);
+        //System.out.println("");
+
+        if(goal.value==inf) return;
+
+        while(!openSet.isEmpty()){
+            current = openSet.get(0);
+            for(Node n: openSet){
+                if((h(n,goal))<(h(current,goal))) current =n;
+            }
+            //System.out.println(current.i+" "+ current.j);
+            if(current.i==goal.i && current.j==goal.j){
+                ArrayList<Node> path = new ArrayList<>();
+                path.add(current);
+                while(current.cameFrom!=null) {
+                    path.add(current.cameFrom);
+                    current = current.cameFrom;
+                }
+                Collections.reverse(path);
+                //System.out.println(path.toString());
+                Node[] path1 = new Node[path.size()];
+                for(int k = 0; k< path.size(); k++){
+                    path1[k]=path.get(k);
+                }
+                player.setPath(path1);
+                return;
+            }
+            ArrayList<Node> neighbours = new ArrayList<>();
+            openSet.remove(current);
+            //closedSet.add(current);
+            if((current.i-1)>=0) {
+                neighbours.add(nodes[current.i-1][current.j]);
+                if((current.j-1)>=0) {
+                    neighbours.add(nodes[current.i-1][current.j-1]);
+                }
+                if((current.j+1)<Constants.boardHeight) {
+                    neighbours.add(nodes[current.i-1][current.j+1]);
+                }
+            }
+            if((current.i+1)<Constants.boardWight) {
+                neighbours.add(nodes[current.i + 1][current.j]);
+                if((current.j-1)>=0) {
+                    neighbours.add(nodes[current.i+1][current.j-1]);
+                }
+                if((current.j+1)<Constants.boardHeight) {
+                    neighbours.add(nodes[current.i+1][current.j+1]);
+                }
+            }
+            if((current.j-1)>=0) neighbours.add(nodes[current.i][current.j-1]);
+            if((current.j+1)<Constants.boardHeight) neighbours.add(nodes[current.i][current.j+1]);
+            for(Node n: neighbours){
+                int tempG = current.g+n.value;
+                if(tempG<n.g){
+                    n.cameFrom=current;
+                    n.g=tempG;
+                    n.f=n.g+h(n,goal);
+                    if(!doesIncludeNode(openSet,n)) openSet.add(n);
+                }
+            }
+        }
+        System.out.println("failure");
+    }
+
+    private int h(Node n, Node f){
+        return (int)Math.sqrt((n.i-f.i)*(n.i-f.i)+(n.j-f.j)*(n.j-f.j));
+    }
+
+    private boolean doesIncludeNode(ArrayList<Node> arrayList,Node n){
+        for(Node n1: arrayList){
+            if (n1==n) return true;
+        }
+        return false;
     }
 }

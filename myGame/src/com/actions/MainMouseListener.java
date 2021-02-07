@@ -1,5 +1,6 @@
 package com.actions;
 
+import com.mapObjects.Stone;
 import com.ui.GamePanel;
 import com.ui.NearMouseBox;
 
@@ -28,6 +29,13 @@ public class MainMouseListener extends MouseInputAdapter {
             box.setPressedCellPanel(box.getHighlightedCellPanel());
             box.setStartShifts(e.getX(), e.getY());
             box.setDraggedItem(box.getPressedCellPanel().getItem());
+        } else if(e.getButton()==1){
+            Stone stone = new Stone(e.getX(),e.getY());
+            stone.getRectangle().x=e.getX()-stone.getWight()/2;
+            stone.getRectangle().y=e.getY()-stone.getHeight()/2;
+            panel.getMap().staticTerrain.add(stone);
+        } else if(e.getButton()==3){
+            panel.getMap().calculatePath(e.getX(),e.getY());
         }
     }
 

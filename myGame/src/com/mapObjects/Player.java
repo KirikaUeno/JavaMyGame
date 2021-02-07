@@ -3,6 +3,7 @@ package com.mapObjects;
 import com.company.Constants;
 import com.image.ImageFactory;
 import com.image.Images;
+import com.maps.Node;
 
 import javax.swing.*;
 
@@ -10,6 +11,8 @@ public class Player extends DynamicSprite {
     private final Skin skin;
     private final int[] pressedButtons = new int[4];
     private final int i=0;
+    private int j = 0;
+    private Node[] path = null;
     protected ImageIcon spriteLeft1;
     protected ImageIcon spriteRight1;
     protected ImageIcon spriteLeft2;
@@ -28,20 +31,37 @@ public class Player extends DynamicSprite {
         this.spriteLeft2= ImageFactory.createImage(Images.npsLeft2);
         this.spriteLeft4= ImageFactory.createImage(Images.npsLeft4);
         this.spriteStay0 = ImageFactory.createImage(Images.SKIN1);
+        speed=2;
     }
 
     @Override
     public void move() {
-        dx = (pressedButtons[3] - pressedButtons[1]);
-        dy = (pressedButtons[2] - pressedButtons[0]);
-        if(dx!=0 || dy!=0) {
-            double dx1 = dx / Math.sqrt(dx * dx + dy * dy);
-            double dy1 = dy / Math.sqrt(dx * dx + dy * dy);
-            dx = dx1*speed;
-            dy = dy1*speed;
-            rectangle.x += dx;
-            rectangle.y += dy;
-        }
+        if(path!=null) {
+            //System.out.println(path.length);
+            for (int k = 0; k < speed; k++) {
+                if(path!=null) {
+                    if (j < path.length) {
+                        //System.out.println(rectangle.x);
+                        rectangle.x = path[j].i-this.getWight()/2;
+                        rectangle.y = path[j].j-this.getHeight()/2;
+                        j++;
+                    } else {
+                        j = 0;
+                        path = null;
+                    }
+                }
+            }
+        } else {
+            dx = (pressedButtons[3] - pressedButtons[1]);
+            dy = (pressedButtons[2] - pressedButtons[0]);
+            if (dx != 0 || dy != 0) {
+                double dx1 = dx / Math.sqrt(dx * dx + dy * dy);
+                double dy1 = dy / Math.sqrt(dx * dx + dy * dy);
+                dx = dx1 * speed;
+                dy = dy1 * speed;
+                rectangle.x += dx;
+                rectangle.y += dy;
+            }
         /*if(dx>0) {
             if(i%40<10){
                 skin.headimage=spriteRight1;
@@ -66,6 +86,7 @@ public class Player extends DynamicSprite {
         }
         i++;
         if(i>199) i=0;*/
+        }
     }
 
     public Skin getSkin() {
@@ -81,5 +102,13 @@ public class Player extends DynamicSprite {
 
     public int[] getPressedButtons() {
         return pressedButtons;
+    }
+
+    public void setPath(Node[] path){
+        this.path = path;
+    }
+
+    public void setJ(int j){
+        this.j=j;
     }
 }
